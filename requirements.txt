@@ -1,0 +1,6 @@
+tqdm
+keras==2.2.4
+keras_preprocessing
+PIL
+medpy
+pandas
