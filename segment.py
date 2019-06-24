@@ -8,9 +8,9 @@ from data_processing import get_filepaths, save_img, get_data_generator
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input', default='sample/input',
+    parser.add_argument('-i', '--input', default='samples/input',
                         help=f'path to the folder with input DICOM images')
-    parser.add_argument('-o', '--output', default='sample/output',
+    parser.add_argument('-o', '--output', default='samples/output',
                         help=f'folder where the output masks will be saved')
 
     return parser.parse_args()
@@ -28,13 +28,16 @@ def main():
     if not os.path.exists(output_path):
         os.makedirs(output_path)
     print('model is loaded, predicting...')
-    predict_all(model, input_path + '/', output_path + '/')
+    predict_all(model, input_path, output_path)
     print('all the images have been processed, prediction is finished')
 
 
 def predict_all(model, in_path, out_path):
     filepaths_df = get_filepaths(in_path)
     length = filepaths_df.shape[0]
+    if length == 0:
+        print('The given folder does not contain .dcm files, exit.')
+        return
     data_generator = get_data_generator(filepaths_df)
 
     outpaths = filepaths_df[0].str.replace(in_path, out_path, 1) + '.png'
